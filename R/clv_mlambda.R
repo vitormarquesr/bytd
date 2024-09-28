@@ -32,7 +32,7 @@ clv_mlambda <- function(rfmt,
   )
 
   t_init <- Sys.time()
-  fit <- rstan::sampling(stanmodels$marginal_lambda, data=data, ...)
+  fit <- rstan::sampling(stanmodels$mlambda, data=data, ...)
   t_final <- Sys.time()
 
   out <- list(rtime = t_final - t_init,

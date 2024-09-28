@@ -32,7 +32,7 @@ clv_mprob <- function(rfmt,
   )
 
   t_init <- Sys.time()
-  fit <- rstan::sampling(stanmodels$marginal_prob, data=data, ...)
+  fit <- rstan::sampling(stanmodels$mprob, data=data, ...)
   t_final <- Sys.time()
 
   out <- list(rtime = t_final - t_init,
