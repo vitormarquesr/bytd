@@ -21,22 +21,18 @@ bgnbd <- function(rfmt,
                       pars_a=c(0.01, 0.01),
                       pars_b=c(0.01, 0.01),
                       approach=c("bayesian", "classical"),
+                      gen_loglik=c("no", "yes"),
                       ...){
-  reff = match.arg(reff)
-  approach = match.arg(approach)
+  reff <- match.arg(reff)
+  approach <- match.arg(approach)
+  gen_loglik <- match.arg(gen_loglik)
 
-  reff <- switch(reff,
-         marginal = 4,
-         prob = 3,
-         lambda = 2,
-         full = 1)
+  approach <- if (reff != "marginal") "bayesian" else approach
+  gen_loglik <- if (approach == "classical") "no" else gen_loglik
 
-  approach = switch(approach,
-                    bayesian = 1,
-                    classical = 0)
   data <- list(
     n = nrow(rfmt),
-    reff = reff,
+    reff = switch(reff, marginal = 4, prob = 3, lambda = 2, full = 1),
     k = rfmt[["frequency"]],
     T = rfmt[["T"]],
     t = rfmt[["recency"]],
@@ -45,11 +41,12 @@ bgnbd <- function(rfmt,
     pars_r,
     pars_a,
     pars_b,
-    approach=approach
+    approach = switch(approach, bayesian = 1, classical = 0),
+    gen_loglik = switch(gen_loglik, yes = 1, no = 0)
   )
 
   t_init <- Sys.time()
-  if ((reff == 4) & (approach == 0)){
+  if ((reff == "marginal") & (approach == "classical")){
     fit <- rstan::optimizing(stanmodels$bgnbd, data=data, ...)
   }else{
     fit <- rstan::sampling(stanmodels$bgnbd, data=data, ...)

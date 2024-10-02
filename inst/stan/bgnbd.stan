@@ -7,6 +7,7 @@ data{
   int<lower = 1> n;
   int reff; //1 - full, 2 - mlamba, 3 - mprob, 4 - marginal
   int approach; // 1 - bayesiano; 0 - clássico (se aplicável)
+  int gen_loglik; // 1 - true; 0 - false
   vector<lower = 0>[2] pars_alpha;
   vector<lower = 0>[2] pars_r;
   vector<lower = 0>[2] pars_a;
@@ -67,3 +68,20 @@ model {
   }
 }
 
+generated quantities{
+  vector[gen_loglik == 0 ? 0: n] log_lik;
+
+  if ((approach == 1) && (gen_loglik == 1)){
+    for (i in 1:n) {
+      if (reff == 1){
+        log_lik[i] = loglik_full(k[i], t[i], T[i], delta[i], lambda[i], p[i]);
+      }else if (reff == 2){
+        log_lik[i] = loglik_mlambda(k[i], t[i], T[i], delta[i], lambda[i], a, b);
+      }else if (reff == 3){
+        log_lik[i] = loglik_mprob(k[i], t[i], T[i], delta[i], r, alpha, p[i]);
+      }else if (reff == 4){
+        log_lik[i] = loglik_marginal(k[i], t[i], T[i], delta[i], r, alpha, a, b);
+      }
+    }
+  }
+}
