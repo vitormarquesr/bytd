@@ -32,8 +32,8 @@ transformed data{
 }
 
 parameters {
-  real<lower=0> alpha;
   real<lower=0> r;
+  real<lower=0> alpha;
   real<lower=0> a;
   real<lower=0> b;
   vector<lower=0>[has_lambda == 0 ? 0 : n] lambda;
@@ -42,8 +42,8 @@ parameters {
 
 model {
   if (reff !=  4 || approach != 0){
-      alpha ~ gamma(pars_alpha[1], pars_alpha[2]);
       r ~ gamma(pars_r[1], pars_r[2]);
+      alpha ~ gamma(pars_alpha[1], pars_alpha[2]);
       a ~ gamma(pars_a[1], pars_a[2]);
       b ~ gamma(pars_b[1], pars_b[2]);
   }
@@ -69,9 +69,9 @@ model {
 }
 
 generated quantities{
-  vector[gen_loglik == 0 ? 0: n] log_lik;
+  vector[gen_loglik == 0 ? 0 : n] log_lik;
 
-  if ((approach == 1) && (gen_loglik == 1)){
+  if (gen_loglik == 1){
     for (i in 1:n) {
       if (reff == 1){
         log_lik[i] = loglik_full(k[i], t[i], T[i], delta[i], lambda[i], p[i]);
@@ -81,7 +81,7 @@ generated quantities{
         log_lik[i] = loglik_mprob(k[i], t[i], T[i], delta[i], r, alpha, p[i]);
       }else if (reff == 4){
         log_lik[i] = loglik_marginal(k[i], t[i], T[i], delta[i], r, alpha, a, b);
-      }
-    }
-  }
+     }
+   }
+ }
 }
