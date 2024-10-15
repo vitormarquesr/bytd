@@ -1,0 +1,57 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# bytd
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The aim of bytd is to provide a toolkit for fitting the Beta-Geometric/Negative-Binomial Distribution (BG/NBD) model for CLV Modeling.
+
+## Installation
+
+You can install the development version of bytd from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("vitormarquesr/bytd")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(bytd)
+
+# Simulating weekly RFM data for a base of 1300 customers
+n <- 1300
+
+# observation period of 80 weeks
+T <- 80
+
+# average purchase rate of twice per month
+pars_gamma <- repar_Gamma(0.5, 0.3)
+
+# average probability of droping out of 0.25.
+pars_beta <- repar_Beta(0.25, 0.1)
+
+rfm <- rbgnbd(n, T, pars_gamma[1], pars_gamma[2], pars_beta[1], pars_beta[2])
+
+# fitting the marginalized loglikehood BG/NBD model throught a bayesian approach
+m <- bgnbd(rfm, reff="marginal", approach="bayesian", cores=4)
+
+m$fit
+```

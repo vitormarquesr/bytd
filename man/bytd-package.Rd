@@ -4,7 +4,7 @@
 \name{bytd-package}
 \alias{bytd-package}
 \alias{bytd}
-\title{bytd: What the Package Does (One Line, Title Case)}
+\title{bytd: Bayesian implementation of BG/NBD for CLV modeling}
 \description{
 A DESCRIPTION OF THE PACKAGE
 }
