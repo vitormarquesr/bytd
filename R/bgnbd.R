@@ -57,5 +57,9 @@ bgnbd <- function(rfmt,
   out <- list(rtime = t_final - t_init,
               fit = fit)
 
+  if (gen_loglik == "yes"){
+    out$elpd <-loo::elpd(loo::extract_log_lik(out$fit))
+  }
+
   return(out)
 }
